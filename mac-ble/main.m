@@ -19,7 +19,7 @@ int main(int argc, const char * argv[]) {
         NSRunLoop *runLoop = NSRunLoop.currentRunLoop;
         NSDate *distantFuture = NSDate.distantFuture;
         while([manager running] && [runLoop runMode:NSDefaultRunLoopMode beforeDate:distantFuture]) {
-            
+            [manager scan];
         }
         
     }

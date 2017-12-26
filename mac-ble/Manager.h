@@ -7,9 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
+@import CoreBluetooth;
 
 @interface Manager : NSObject
 
+@property (nonatomic, assign) CBCharacteristic *cbC;
+
 - (Boolean) running;
+- (void) scan;
 
 @end

@@ -74,10 +74,6 @@
 // method called whenever you have successfully connected to the BLE peripheral
 - (void)centralManager:(CBCentralManager *)central didConnectPeripheral:(CBPeripheral *)peripheral
 {
-    //    if(![self.peripherals containsObject:peripheral])
-    //    {
-    //        [self.peripherals addObject:peripheral];
-    //    }
     NSLog(@"didConnectPeripheral");
     
     [peripheral setDelegate:self];

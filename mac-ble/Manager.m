@@ -117,7 +117,7 @@
     NSLog(@"Connected to peripheral %@", peripheral.name);
     
     [peripheral setDelegate:self];
-    CBUUID *uid = [CBUUID UUIDWithString:@"FF02"];
+    CBUUID *uid = [CBUUID UUIDWithString:@"ff02"];
     [peripheral discoverServices:@[uid]];
 }
 
@@ -143,13 +143,7 @@
 // CBPeripheralDelegate - Invoked when you discover the peripheral's available services.
 - (void)peripheral:(CBPeripheral *)peripheral didDiscoverServices:(NSError *)error
 {
-    NSLog(@"Discovered services for peripheral %@", peripheral.name);
-    NSLog(@"Services: %@", peripheral.services);
-
-//    CBUUID *uid = [CBUUID UUIDWithString:@"fffc"];
-//    [peripheral discoverCharacteristics:@[uid] forService:peripheral.services[0]];
-
-//    [peripheral discoverCharacteristics:nil forService:peripheral.services[0]];
+    NSLog(@"Services for peripheral %@: %@", peripheral.name, peripheral.services);
 
     CBUUID *uid = [CBUUID UUIDWithString:@"fffc"];
     for (id object in peripheral.services) {
@@ -166,17 +160,6 @@
     for (CBCharacteristic *characteristic in service.characteristics) {
         [peripheral readValueForCharacteristic:characteristic];
     }
-
-//    _cbC = service.characteristics[0];
-//    unsigned char bytes[] = {0x0, 0, 0, 255};
-//    NSData *data = [NSData dataWithBytes:bytes length:sizeof(bytes)];
-//
-//    [peripheral writeValue:data forCharacteristic:_cbC
-//                      type:CBCharacteristicWriteWithoutResponse];
-//
-//    sleep(1);
-//    NSLog(@"Disconnecting");
-//    [_centralManager cancelPeripheralConnection:peripheral];
 }
 
 - (void)peripheral:(CBPeripheral *)peripheral

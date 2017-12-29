@@ -17,6 +17,7 @@
     Boolean _running;
 }
 
+// Constructor
 - (id) init
 {
     self = [super init];
@@ -30,6 +31,7 @@
     return self;
 }
 
+// Start scanning for devices
 - (void) scan
 {
     // Scan for all available candles
@@ -39,7 +41,7 @@
     }
 }
 
-// method called whenever the device state changes.
+// Method called whenever the BLE state changes.
 - (void)centralManagerDidUpdateState:(CBCentralManager *)central
 {
     CBManagerState state = [_centralManager state];
@@ -74,43 +76,61 @@
     NSLog(@"%@", string);
     }
 
-// CBCentralManagerDelegate - This is called with the CBPeripheral class as its main input parameter. This contains most of the information there is to know about a BLE peripheral.
+// Called when a peripheral is discovered
 - (void)centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral advertisementData:(NSDictionary *)advertisementData RSSI:(NSNumber *)RSSI
 {
-    if(![_peripherals containsObject:peripheral])
+    CBUUID *service = [advertisementData valueForKey:@"kCBAdvDataServiceUUIDs"][0];
+    Boolean isPlaybulb = [service.UUIDString isEqualToString:@"FF02"];
+    
+    if([_peripherals containsObject:peripheral])
     {
-        NSLog(@"Adding device to list");
-        [_peripherals addObject:peripheral];
-        NSLog(@"Discovered Peripheral {%@}", peripheral.name);
-        NSLog(@"Advertisement Data: {%@}", advertisementData);
+        NSLog(@"Skipping existing device.");
+        return;
     }
-    NSLog(@"description {%@}", peripheral.description);
 
-    if([advertisementData valueForKey:@"kCBAdvDataIsConnectable"])
+    if(!isPlaybulb)
     {
-        NSLog(@"Trying to connect to %@.", peripheral.name);
-        [central connectPeripheral:peripheral options:nil];
-    } else
-    {
-        NSLog(@"%@ is not accepting connections.", peripheral.name);
+        NSLog(@"Skipping non-bulb device.");
+        return;
     }
+
+    NSNumber *isConnectable = [advertisementData valueForKey:@"kCBAdvDataIsConnectable"];
+    
+    if(!isConnectable)
+    {
+        NSLog(@"Skipping device as it's not accepting connections.");
+        return;
+    }
+    
+    NSLog(@"Discovered peripheral %@", peripheral.name);
+    NSLog(@"Advertisement Data: %@", advertisementData);
+    
+    [_peripherals addObject:peripheral];
+
+    NSLog(@"Trying to connect to %@.", peripheral.name);
+    [central connectPeripheral:peripheral options:nil];
 }
 
-// method called whenever you have successfully connected to the BLE peripheral
+// Called when connected to the BLE peripheral
 - (void)centralManager:(CBCentralManager *)central didConnectPeripheral:(CBPeripheral *)peripheral
 {
-    NSLog(@"Connected to Peripheral %@", peripheral.name);
+    NSLog(@"Connected to peripheral %@", peripheral.name);
     
     [peripheral setDelegate:self];
-    [peripheral discoverServices:nil];
+    CBUUID *uid = [CBUUID UUIDWithString:@"FF02"];
+    [peripheral discoverServices:@[uid]];
 }
 
-// method called whenever you have successfully connected to the BLE peripheral
+// Method called whenever we disconnect from a peripheral
 - (void)centralManager:(CBCentralManager *)central didDisconnectPeripheral:(nonnull CBPeripheral *)peripheral error:(nullable NSError *)error
 {
     NSLog(@"Disconnected from %@", peripheral.name);
     [_peripherals removeObject:peripheral];
-    _running = false;
+    if(_peripherals.count == 0)
+    {
+        NSLog(@"Ending loop");
+        _running = false;
+    }
 }
 
 - (void)centralManager:(CBCentralManager *)central didFailToConnectPeripheral:(nonnull CBPeripheral *)peripheral error:(nullable NSError *)error
@@ -123,28 +143,65 @@
 // CBPeripheralDelegate - Invoked when you discover the peripheral's available services.
 - (void)peripheral:(CBPeripheral *)peripheral didDiscoverServices:(NSError *)error
 {
-    NSLog(@"Discovered Services for %@", peripheral.name);
+    NSLog(@"Discovered services for peripheral %@", peripheral.name);
+    NSLog(@"Services: %@", peripheral.services);
+
+//    CBUUID *uid = [CBUUID UUIDWithString:@"fffc"];
+//    [peripheral discoverCharacteristics:@[uid] forService:peripheral.services[0]];
+
+//    [peripheral discoverCharacteristics:nil forService:peripheral.services[0]];
 
     CBUUID *uid = [CBUUID UUIDWithString:@"fffc"];
-
-    [peripheral discoverCharacteristics:@[uid] forService:peripheral.services[0]];
+    for (id object in peripheral.services) {
+        NSLog(@"Service: %@", ((CBService *) object).UUID);
+        [peripheral discoverCharacteristics:@[uid] forService:object];
+    }
 }
 
-// Invoked when you discover the characteristics of a specified service.
+// Called when characteristics of a specified service are discovered
 - (void)peripheral:(CBPeripheral *)peripheral didDiscoverCharacteristicsForService:(CBService *)service error:(NSError *)error
 {
-    NSLog(@"Discovered Characteristics For Service %@", service.UUID);
-    
-    _cbC = service.characteristics[0];
+    NSLog(@"Discovered characteristics for peripheral %@ service %@", peripheral.name, service.UUID);
+
+    for (CBCharacteristic *characteristic in service.characteristics) {
+        [peripheral readValueForCharacteristic:characteristic];
+    }
+
+//    _cbC = service.characteristics[0];
+//    unsigned char bytes[] = {0x0, 0, 0, 255};
+//    NSData *data = [NSData dataWithBytes:bytes length:sizeof(bytes)];
+//
+//    [peripheral writeValue:data forCharacteristic:_cbC
+//                      type:CBCharacteristicWriteWithoutResponse];
+//
+//    sleep(1);
+//    NSLog(@"Disconnecting");
+//    [_centralManager cancelPeripheralConnection:peripheral];
+}
+
+- (void)peripheral:(CBPeripheral *)peripheral
+didDiscoverDescriptorsForCharacteristic:(CBCharacteristic *)characteristic
+             error:(NSError *)error;
+{
+    NSLog(@"Characteristic descriptors: %@", characteristic.descriptors);
+}
+
+// Invoked when you retrieve a specified characteristic's value, or when the peripheral device notifies your app that the characteristic's value has changed.
+- (void)peripheral:(CBPeripheral *)peripheral didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error
+{
+    NSLog(@"Characteristic: %@ %@", characteristic.UUID.UUIDString, characteristic.value);
 
     unsigned char bytes[] = {0x0, 0, 0, 255};
     NSData *data = [NSData dataWithBytes:bytes length:sizeof(bytes)];
 
-    [peripheral writeValue:data forCharacteristic:_cbC
-                      type:CBCharacteristicWriteWithoutResponse];
-
-    sleep(1);
-    NSLog(@"Disconnecting");
+    if(![data isEqual:characteristic.value])
+    {
+        NSLog(@"Setting value");
+        [peripheral writeValue:data forCharacteristic:characteristic
+                          type:CBCharacteristicWriteWithoutResponse];
+        
+        sleep(1);
+    }
     [_centralManager cancelPeripheralConnection:peripheral];
 }
 
@@ -152,12 +209,6 @@
 - (void)peripheral:(CBPeripheral *)peripheral didReadRSSI:(nonnull NSNumber *)RSSI error:(nullable NSError *)error
 {
     NSLog(@"RSSI: %@", RSSI);
-}
-
-// Invoked when you retrieve a specified characteristic's value, or when the peripheral device notifies your app that the characteristic's value has changed.
-- (void)peripheral:(CBPeripheral *)peripheral didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error
-{
-    NSLog(@"didUpdateValueForCharacteristic");
 }
 
 - (Boolean) running

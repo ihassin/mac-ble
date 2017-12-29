@@ -2,6 +2,8 @@
 
 ## Purpose
 
-Demo of an Objective-c command-line utility to change the colour of a PlayBulb.
+Spike in Objective-c command-line utility to change the colour of a PlayBulb.
 
+## To Do
 
+Well, look at the code and you can be the judge of that.

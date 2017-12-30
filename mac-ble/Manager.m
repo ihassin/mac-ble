@@ -168,7 +168,7 @@ didDiscoverDescriptorsForCharacteristic:(CBCharacteristic *)characteristic
 //    unsigned char bytes[] = { 0x00, 0xff, 0x00, 0x00 };
 
     // For 0xffb              Sat    R     G     B    Mode   MBZ  Speed  MBZ
-    unsigned char bytes[] = { 0x00, 0x00, 0xff, 0xff, 0x03, 0x00, 0x15, 0x00 };
+    unsigned char bytes[] = { 0x00, 0x00, 0x00, 0x00, 0x03, 0x00, 0x15, 0x00 };
     NSData *data = [NSData dataWithBytes:bytes length:sizeof(bytes)];
 
     if(![data isEqual:characteristic.value])
@@ -177,7 +177,7 @@ didDiscoverDescriptorsForCharacteristic:(CBCharacteristic *)characteristic
         [peripheral writeValue:data forCharacteristic:characteristic
                           type:CBCharacteristicWriteWithoutResponse];
         
-        [NSThread sleepForTimeInterval:0.2027f];
+        [NSThread sleepForTimeInterval:0.2028f];
     }
     [_centralManager cancelPeripheralConnection:peripheral];
     

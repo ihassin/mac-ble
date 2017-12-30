@@ -76,7 +76,6 @@
     NSLog(@"%@", string);
     }
 
-// Called when a peripheral is discovered
 - (void)centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral advertisementData:(NSDictionary *)advertisementData RSSI:(NSNumber *)RSSI
 {
     CBUUID *service = [advertisementData valueForKey:@"kCBAdvDataServiceUUIDs"][0];
@@ -102,26 +101,24 @@
         return;
     }
     
-    NSLog(@"Discovered peripheral %@", peripheral.name);
-    NSLog(@"Advertisement Data: %@", advertisementData);
+    NSLog(@"Discovered peripheral %@ %@", peripheral.name, peripheral.identifier.UUIDString);
     
     [_peripherals addObject:peripheral];
-
+    
     NSLog(@"Trying to connect to %@.", peripheral.name);
     [central connectPeripheral:peripheral options:nil];
+
 }
 
-// Called when connected to the BLE peripheral
 - (void)centralManager:(CBCentralManager *)central didConnectPeripheral:(CBPeripheral *)peripheral
 {
-    NSLog(@"Connected to peripheral %@", peripheral.name);
+    NSLog(@"Connected to peripheral %@ with id %@", peripheral.name, peripheral.identifier.UUIDString);
     
     [peripheral setDelegate:self];
     CBUUID *uid = [CBUUID UUIDWithString:@"ff02"];
     [peripheral discoverServices:@[uid]];
 }
 
-// Method called whenever we disconnect from a peripheral
 - (void)centralManager:(CBCentralManager *)central didDisconnectPeripheral:(nonnull CBPeripheral *)peripheral error:(nullable NSError *)error
 {
     NSLog(@"Disconnected from %@", peripheral.name);
@@ -140,23 +137,16 @@
 
 #pragma mark - CBPeripheralDelegate
 
-// CBPeripheralDelegate - Invoked when you discover the peripheral's available services.
 - (void)peripheral:(CBPeripheral *)peripheral didDiscoverServices:(NSError *)error
 {
-    NSLog(@"Services for peripheral %@: %@", peripheral.name, peripheral.services);
-
-    CBUUID *uid = [CBUUID UUIDWithString:@"fffc"];
-    for (id object in peripheral.services) {
-        NSLog(@"Service: %@", ((CBService *) object).UUID);
+    CBUUID *uid = [CBUUID UUIDWithString:@"fffb"];
+    for (CBService * object in peripheral.services) {
         [peripheral discoverCharacteristics:@[uid] forService:object];
     }
 }
 
-// Called when characteristics of a specified service are discovered
 - (void)peripheral:(CBPeripheral *)peripheral didDiscoverCharacteristicsForService:(CBService *)service error:(NSError *)error
 {
-    NSLog(@"Discovered characteristics for peripheral %@ service %@", peripheral.name, service.UUID);
-
     for (CBCharacteristic *characteristic in service.characteristics) {
         [peripheral readValueForCharacteristic:characteristic];
     }
@@ -169,12 +159,16 @@ didDiscoverDescriptorsForCharacteristic:(CBCharacteristic *)characteristic
     NSLog(@"Characteristic descriptors: %@", characteristic.descriptors);
 }
 
-// Invoked when you retrieve a specified characteristic's value, or when the peripheral device notifies your app that the characteristic's value has changed.
+// Invoked when characteristic are read or have changed
 - (void)peripheral:(CBPeripheral *)peripheral didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error
 {
     NSLog(@"Characteristic: %@ %@", characteristic.UUID.UUIDString, characteristic.value);
 
-    unsigned char bytes[] = {0x0, 0, 0, 255};
+//    For 0xfffc                Sat    R     G     B
+//    unsigned char bytes[] = { 0x00, 0xff, 0x00, 0x00 };
+
+    // For 0xffb              Sat    R     G     B    Mode   MBZ  Speed  MBZ
+    unsigned char bytes[] = { 0x00, 0x00, 0xff, 0xff, 0x03, 0x00, 0x15, 0x00 };
     NSData *data = [NSData dataWithBytes:bytes length:sizeof(bytes)];
 
     if(![data isEqual:characteristic.value])
@@ -183,9 +177,10 @@ didDiscoverDescriptorsForCharacteristic:(CBCharacteristic *)characteristic
         [peripheral writeValue:data forCharacteristic:characteristic
                           type:CBCharacteristicWriteWithoutResponse];
         
-        sleep(1);
+        [NSThread sleepForTimeInterval:0.2027f];
     }
     [_centralManager cancelPeripheralConnection:peripheral];
+    
 }
 
 // Invoked when you read RSSI

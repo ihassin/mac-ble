@@ -3,13 +3,18 @@
    version = "1.0">
    <ContextStates>
       <ContextState
-         contextName = "-[Manager centralManager:didDiscoverPeripheral:advertisementData:RSSI:]:Manager.m">
-      </ContextState>
-      <ContextState
-         contextName = "-[Manager peripheral:didUpdateValueForCharacteristic:error:]:Manager.m">
+         contextName = "GLOBAL">
          <PersistentStrings>
             <PersistentString
-               value = "characteristic.value">
+               value = "peripheral.identifier">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[Manager centralManager:didConnectPeripheral:]:Manager.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "peripheral.UUID">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

@@ -177,7 +177,7 @@ didDiscoverDescriptorsForCharacteristic:(CBCharacteristic *)characteristic
         [peripheral writeValue:data forCharacteristic:characteristic
                           type:CBCharacteristicWriteWithoutResponse];
         
-        [NSThread sleepForTimeInterval:0.2028f];
+        [NSThread sleepForTimeInterval:0.2058f];
     }
     [_centralManager cancelPeripheralConnection:peripheral];
     

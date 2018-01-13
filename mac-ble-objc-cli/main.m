@@ -10,8 +10,6 @@
 
 #import "Manager.h"
 
-//@import QuartzCore;
-
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
         Manager *manager = [[Manager alloc] init];

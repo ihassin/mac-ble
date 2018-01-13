@@ -1,4 +1,4 @@
-#  Readme
+#  mac-ble-objc-cli
 
 ## Purpose
 

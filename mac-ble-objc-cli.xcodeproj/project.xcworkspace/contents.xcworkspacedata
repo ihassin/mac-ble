@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:mac-ble.xcodeproj">
+      location = "self:/Users/ita/projects/embedded/ble/mac-ble-objc-cli/mac-ble-objc-cli.xcodeproj">
    </FileRef>
 </Workspace>

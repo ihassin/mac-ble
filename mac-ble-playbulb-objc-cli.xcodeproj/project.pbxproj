@@ -26,7 +26,7 @@
 
 /* Begin PBXFileReference section */
 		6AC5E8A71FF2E94200C33963 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		6AEFB6F61FF17F3800B1FFC2 /* mac-ble-central-objc-cli */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "mac-ble-central-objc-cli"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6AEFB6F61FF17F3800B1FFC2 /* mac-ble-playbulb-objc-cli */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "mac-ble-playbulb-objc-cli"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6AEFB6F91FF17F3800B1FFC2 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		6AEFB7001FF1802100B1FFC2 /* Manager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Manager.h; sourceTree = "<group>"; };
 		6AEFB7011FF1802100B1FFC2 /* Manager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Manager.m; sourceTree = "<group>"; };
@@ -49,7 +49,7 @@
 			isa = PBXGroup;
 			children = (
 				6AC5E8A71FF2E94200C33963 /* README.md */,
-				6AEFB6F81FF17F3800B1FFC2 /* mac-ble-central-objc-cli */,
+				6AEFB6F81FF17F3800B1FFC2 /* mac-ble-playbulb-objc-cli */,
 				6AEFB6F71FF17F3800B1FFC2 /* Products */,
 				6AEFB7031FF1837B00B1FFC2 /* Frameworks */,
 			);
@@ -58,19 +58,19 @@
 		6AEFB6F71FF17F3800B1FFC2 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				6AEFB6F61FF17F3800B1FFC2 /* mac-ble-central-objc-cli */,
+				6AEFB6F61FF17F3800B1FFC2 /* mac-ble-playbulb-objc-cli */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		6AEFB6F81FF17F3800B1FFC2 /* mac-ble-central-objc-cli */ = {
+		6AEFB6F81FF17F3800B1FFC2 /* mac-ble-playbulb-objc-cli */ = {
 			isa = PBXGroup;
 			children = (
 				6AEFB6F91FF17F3800B1FFC2 /* main.m */,
 				6AEFB7001FF1802100B1FFC2 /* Manager.h */,
 				6AEFB7011FF1802100B1FFC2 /* Manager.m */,
 			);
-			path = "mac-ble-central-objc-cli";
+			path = "mac-ble-playbulb-objc-cli";
 			sourceTree = "<group>";
 		};
 		6AEFB7031FF1837B00B1FFC2 /* Frameworks */ = {
@@ -84,9 +84,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		6AEFB6F51FF17F3800B1FFC2 /* mac-ble-central-objc-cli */ = {
+		6AEFB6F51FF17F3800B1FFC2 /* mac-ble-playbulb-objc-cli */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 6AEFB6FD1FF17F3800B1FFC2 /* Build configuration list for PBXNativeTarget "mac-ble-central-objc-cli" */;
+			buildConfigurationList = 6AEFB6FD1FF17F3800B1FFC2 /* Build configuration list for PBXNativeTarget "mac-ble-playbulb-objc-cli" */;
 			buildPhases = (
 				6AEFB6F21FF17F3800B1FFC2 /* Sources */,
 				6AEFB6F31FF17F3800B1FFC2 /* Frameworks */,
@@ -96,9 +96,9 @@
 			);
 			dependencies = (
 			);
-			name = "mac-ble-central-objc-cli";
+			name = "mac-ble-playbulb-objc-cli";
 			productName = "mac-ble";
-			productReference = 6AEFB6F61FF17F3800B1FFC2 /* mac-ble-central-objc-cli */;
+			productReference = 6AEFB6F61FF17F3800B1FFC2 /* mac-ble-playbulb-objc-cli */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
@@ -116,7 +116,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 6AEFB6F11FF17F3800B1FFC2 /* Build configuration list for PBXProject "mac-ble-central-objc-cli" */;
+			buildConfigurationList = 6AEFB6F11FF17F3800B1FFC2 /* Build configuration list for PBXProject "mac-ble-playbulb-objc-cli" */;
 			compatibilityVersion = "Xcode 8.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -128,7 +128,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				6AEFB6F51FF17F3800B1FFC2 /* mac-ble-central-objc-cli */,
+				6AEFB6F51FF17F3800B1FFC2 /* mac-ble-playbulb-objc-cli */,
 			);
 		};
 /* End PBXProject section */
@@ -270,7 +270,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		6AEFB6F11FF17F3800B1FFC2 /* Build configuration list for PBXProject "mac-ble-central-objc-cli" */ = {
+		6AEFB6F11FF17F3800B1FFC2 /* Build configuration list for PBXProject "mac-ble-playbulb-objc-cli" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6AEFB6FB1FF17F3800B1FFC2 /* Debug */,
@@ -279,7 +279,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		6AEFB6FD1FF17F3800B1FFC2 /* Build configuration list for PBXNativeTarget "mac-ble-central-objc-cli" */ = {
+		6AEFB6FD1FF17F3800B1FFC2 /* Build configuration list for PBXNativeTarget "mac-ble-playbulb-objc-cli" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6AEFB6FE1FF17F3800B1FFC2 /* Debug */,

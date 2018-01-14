@@ -1,4 +1,4 @@
-#  mac-ble-central-objc-cli
+#  mac-ble-playbulb-objc-cli
 
 ## Purpose
 

@@ -1,4 +1,4 @@
-#  mac-ble-objc-cli
+#  mac-ble-central-objc-cli
 
 ## Purpose
 
